@@ -1,0 +1,848 @@
+{
+	"info": {
+		"_postman_id": "09d340cf-e731-4c0e-8537-00d0b230cf4f",
+		"name": "Product Catalog Api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29054122",
+		"_collection_link": "https://team-seven-3872.postman.co/workspace/legal-studio~b4ed8c4e-c356-4826-b1b7-f58dbc4ce761/collection/29054122-09d340cf-e731-4c0e-8537-00d0b230cf4f?action=share&source=collection_link&creator=29054122"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080"
+		},
+		{
+			"key": "productId",
+			"value": "1"
+		},
+		{
+			"key": "sellerId",
+			"value": "1"
+		}
+	],
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "List Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 200",
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test: Response content-type is JSON",
+									"pm.test('Content-Type is application/json', function () {",
+									"    const contentType = pm.response.headers.get('Content-Type');",
+									"    pm.expect(contentType).to.include('application/json');",
+									"});",
+									"",
+									"// Test: Response has paginated structure",
+									"pm.test('Response has paginated structure', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('content');",
+									"    pm.expect(jsonData).to.have.property('page');",
+									"    pm.expect(jsonData).to.have.property('totalElements');",
+									"    pm.expect(jsonData).to.have.property('totalPages');",
+									"    pm.expect(jsonData).to.have.property('size');",
+									"    pm.expect(jsonData).to.have.property('first');",
+									"    pm.expect(jsonData).to.have.property('last');",
+									"});",
+									"",
+									"// Test: Content is an array",
+									"pm.test('Content is an array', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.content).to.be.an('array');",
+									"});",
+									"",
+									"// Test: Each product in content has required fields",
+									"pm.test('Each product has required fields (id, name, price)', function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.content.length > 0) {",
+									"        jsonData.content.forEach(function (product) {",
+									"            pm.expect(product).to.have.property('id');",
+									"            pm.expect(product).to.have.property('name');",
+									"            pm.expect(product).to.have.property('price');",
+									"        });",
+									"    }",
+									"});",
+									"",
+									"// Test: Response time is acceptable",
+									"pm.test('Response time is less than 2000ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"// Store first product ID for next requests (if exists)",
+									"const jsonData = pm.response.json();",
+									"if (jsonData.content && jsonData.content.length > 0) {",
+									"    pm.collectionVariables.set('productId', jsonData.content[0].id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 201 Created",
+									"pm.test('Status code is 201 Created', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"// Test: Response content-type is JSON",
+									"pm.test('Content-Type is application/json', function () {",
+									"    const contentType = pm.response.headers.get('Content-Type');",
+									"    pm.expect(contentType).to.include('application/json');",
+									"});",
+									"",
+									"// Test: Response has product ID",
+									"pm.test('Response has product ID', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData.id).to.not.be.null;",
+									"});",
+									"",
+									"// Test: Response has all required product fields",
+									"pm.test('Response has all required product fields', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData).to.have.property('description');",
+									"    pm.expect(jsonData).to.have.property('price');",
+									"    pm.expect(jsonData).to.have.property('availableQuantity');",
+									"    pm.expect(jsonData).to.have.property('condition');",
+									"    pm.expect(jsonData).to.have.property('category');",
+									"    pm.expect(jsonData).to.have.property('variants');",
+									"    pm.expect(jsonData).to.have.property('seller');",
+									"});",
+									"",
+									"// Test: Product name matches request",
+									"pm.test('Product name matches request', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    pm.expect(jsonData.name).to.eql(requestBody.name);",
+									"});",
+									"",
+									"// Test: Product price matches request",
+									"pm.test('Product price matches request', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    pm.expect(jsonData.price).to.eql(requestBody.price);",
+									"});",
+									"",
+									"// Test: Product condition matches request",
+									"pm.test('Product condition matches request', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    pm.expect(jsonData.condition).to.eql(requestBody.condition);",
+									"});",
+									"",
+									"// Test: Variants is an array",
+									"pm.test('Variants is an array', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.variants).to.be.an('array');",
+									"});",
+									"",
+									"// Test: Seller object has required fields",
+									"pm.test('Seller object has required fields', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.seller).to.have.property('id');",
+									"    pm.expect(jsonData.seller).to.have.property('name');",
+									"    pm.expect(jsonData.seller).to.have.property('description');",
+									"    pm.expect(jsonData.seller).to.have.property('score');",
+									"});",
+									"",
+									"// Test: Response time is acceptable",
+									"pm.test('Response time is less than 2000ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});",
+									"",
+									"// Store created product ID for update/delete tests",
+									"const jsonData = pm.response.json();",
+									"if (jsonData.id) {",
+									"    pm.collectionVariables.set('productId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Generate unique product name with timestamp",
+									"const timestamp = new Date().getTime();",
+									"pm.collectionVariables.set('uniqueProductName', 'Test Product ' + timestamp);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Smartphone Galaxy S23\",\r\n  \"description\": \"Latest model with high res camera\",\r\n  \"price\": 4500.00,\r\n  \"availableQuantity\": 100,\r\n  \"condition\": \"NEW\",\r\n  \"category\": \"Electronics\",\r\n  \"sellerId\": {{sellerId}},\r\n  \"variants\": [\r\n    {\r\n      \"id\": null,\r\n      \"type\": \"COLOR\",\r\n      \"values\": [\r\n        {\r\n          \"id\": null,\r\n          \"value\": \"Phantom Black\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"id\": null,\r\n      \"type\": \"STORAGE\",\r\n      \"values\": [\r\n        {\r\n          \"id\": null,\r\n          \"value\": \"256GB\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product - Validation Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 400 Bad Request",
+									"pm.test('Status code is 400 Bad Request', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Test: Response content-type is JSON",
+									"pm.test('Content-Type is application/json', function () {",
+									"    const contentType = pm.response.headers.get('Content-Type');",
+									"    pm.expect(contentType).to.include('application/json');",
+									"});",
+									"",
+									"// Test: Response has error structure (RFC 7807)",
+									"pm.test('Response has RFC 7807 error structure', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('type');",
+									"    pm.expect(jsonData).to.have.property('title');",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"    pm.expect(jsonData.status).to.eql(400);",
+									"});",
+									"",
+									"// Test: Response contains validation errors",
+									"pm.test('Response contains validation errors', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('errors');",
+									"    pm.expect(jsonData.errors).to.be.an('array');",
+									"    pm.expect(jsonData.errors.length).to.be.greaterThan(0);",
+									"});",
+									"",
+									"// Test: Each error has field and message",
+									"pm.test('Each validation error has field and message', function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.errors && jsonData.errors.length > 0) {",
+									"        jsonData.errors.forEach(function (error) {",
+									"            pm.expect(error).to.have.property('field');",
+									"            pm.expect(error).to.have.property('message');",
+									"        });",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"\",\r\n  \"description\": \"\",\r\n  \"price\": -100,\r\n  \"availableQuantity\": -5,\r\n  \"condition\": \"\",\r\n  \"category\": \"\",\r\n  \"sellerId\": null,\r\n  \"variants\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Detail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 200",
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test: Response content-type is JSON",
+									"pm.test('Content-Type is application/json', function () {",
+									"    const contentType = pm.response.headers.get('Content-Type');",
+									"    pm.expect(contentType).to.include('application/json');",
+									"});",
+									"",
+									"// Test: Response has all product detail fields",
+									"pm.test('Response has all product detail fields', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData).to.have.property('description');",
+									"    pm.expect(jsonData).to.have.property('price');",
+									"    pm.expect(jsonData).to.have.property('availableQuantity');",
+									"    pm.expect(jsonData).to.have.property('condition');",
+									"    pm.expect(jsonData).to.have.property('category');",
+									"    pm.expect(jsonData).to.have.property('variants');",
+									"    pm.expect(jsonData).to.have.property('seller');",
+									"});",
+									"",
+									"// Test: Product ID matches the requested ID",
+									"pm.test('Product ID matches requested ID', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestedId = parseInt(pm.collectionVariables.get('productId'));",
+									"    pm.expect(jsonData.id).to.eql(requestedId);",
+									"});",
+									"",
+									"// Test: Product ID is a positive number",
+									"pm.test('Product ID is a positive number', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.be.a('number');",
+									"    pm.expect(jsonData.id).to.be.above(0);",
+									"});",
+									"",
+									"// Test: Price is a positive number",
+									"pm.test('Price is a positive number', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.price).to.be.a('number');",
+									"    pm.expect(jsonData.price).to.be.above(0);",
+									"});",
+									"",
+									"// Test: Available quantity is non-negative",
+									"pm.test('Available quantity is non-negative', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.availableQuantity).to.be.a('number');",
+									"    pm.expect(jsonData.availableQuantity).to.be.at.least(0);",
+									"});",
+									"",
+									"// Test: Condition is a valid enum value",
+									"pm.test('Condition is a valid enum value', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const validConditions = ['NEW', 'USED', 'REFURBISHED'];",
+									"    pm.expect(validConditions).to.include(jsonData.condition);",
+									"});",
+									"",
+									"// Test: Variants is an array",
+									"pm.test('Variants is an array', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.variants).to.be.an('array');",
+									"});",
+									"",
+									"// Test: Each variant has required fields",
+									"pm.test('Each variant has required fields', function () {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.variants && jsonData.variants.length > 0) {",
+									"        jsonData.variants.forEach(function (variant) {",
+									"            pm.expect(variant).to.have.property('id');",
+									"            pm.expect(variant).to.have.property('type');",
+									"            pm.expect(variant).to.have.property('values');",
+									"            pm.expect(variant.values).to.be.an('array');",
+									"        });",
+									"    }",
+									"});",
+									"",
+									"// Test: Seller object has required fields",
+									"pm.test('Seller object has required fields', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.seller).to.have.property('id');",
+									"    pm.expect(jsonData.seller).to.have.property('name');",
+									"    pm.expect(jsonData.seller).to.have.property('description');",
+									"    pm.expect(jsonData.seller).to.have.property('score');",
+									"});",
+									"",
+									"// Test: Seller score is a valid number",
+									"pm.test('Seller score is a valid number', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.seller.score).to.be.a('number');",
+									"    pm.expect(jsonData.seller.score).to.be.at.least(0);",
+									"});",
+									"",
+									"// Test: Response time is acceptable",
+									"pm.test('Response time is less than 2000ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Detail - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 404 Not Found",
+									"pm.test('Status code is 404 Not Found', function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"// Test: Response content-type is JSON",
+									"pm.test('Content-Type is application/json', function () {",
+									"    const contentType = pm.response.headers.get('Content-Type');",
+									"    pm.expect(contentType).to.include('application/json');",
+									"});",
+									"",
+									"// Test: Response has error structure (RFC 7807)",
+									"pm.test('Response has RFC 7807 error structure', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('type');",
+									"    pm.expect(jsonData).to.have.property('title');",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"    pm.expect(jsonData.status).to.eql(404);",
+									"});",
+									"",
+									"// Test: Response has detail message",
+									"pm.test('Response has detail message', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('detail');",
+									"    pm.expect(jsonData.detail).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/999999999",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"999999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 200",
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test: Response content-type is JSON",
+									"pm.test('Content-Type is application/json', function () {",
+									"    const contentType = pm.response.headers.get('Content-Type');",
+									"    pm.expect(contentType).to.include('application/json');",
+									"});",
+									"",
+									"// Test: Response has all required product fields",
+									"pm.test('Response has all required product fields', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('id');",
+									"    pm.expect(jsonData).to.have.property('name');",
+									"    pm.expect(jsonData).to.have.property('description');",
+									"    pm.expect(jsonData).to.have.property('price');",
+									"    pm.expect(jsonData).to.have.property('availableQuantity');",
+									"    pm.expect(jsonData).to.have.property('condition');",
+									"    pm.expect(jsonData).to.have.property('category');",
+									"    pm.expect(jsonData).to.have.property('variants');",
+									"    pm.expect(jsonData).to.have.property('seller');",
+									"});",
+									"",
+									"// Test: Product ID matches the requested ID",
+									"pm.test('Product ID matches requested ID', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestedId = parseInt(pm.collectionVariables.get('productId'));",
+									"    pm.expect(jsonData.id).to.eql(requestedId);",
+									"});",
+									"",
+									"// Test: Product name was updated",
+									"pm.test('Product name was updated', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    pm.expect(jsonData.name).to.eql(requestBody.name);",
+									"});",
+									"",
+									"// Test: Product price was updated",
+									"pm.test('Product price was updated', function () {",
+									"    const jsonData = pm.response.json();",
+									"    const requestBody = JSON.parse(pm.request.body.raw);",
+									"    pm.expect(jsonData.price).to.eql(requestBody.price);",
+									"});",
+									"",
+									"// Test: Variants is an array",
+									"pm.test('Variants is an array', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.variants).to.be.an('array');",
+									"});",
+									"",
+									"// Test: Seller object has required fields",
+									"pm.test('Seller object has required fields', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.seller).to.have.property('id');",
+									"    pm.expect(jsonData.seller).to.have.property('name');",
+									"    pm.expect(jsonData.seller).to.have.property('description');",
+									"    pm.expect(jsonData.seller).to.have.property('score');",
+									"});",
+									"",
+									"// Test: Response time is acceptable",
+									"pm.test('Response time is less than 2000ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Smartphone Galaxy S24 Ultra\",\r\n  \"description\": \"Updated model with improved camera\",\r\n  \"price\": 5500.00,\r\n  \"availableQuantity\": 150,\r\n  \"condition\": \"NEW\",\r\n  \"category\": \"Electronics\",\r\n  \"sellerId\": {{sellerId}},\r\n  \"variants\": [\r\n    {\r\n      \"id\": null,\r\n      \"type\": \"COLOR\",\r\n      \"values\": [\r\n        {\r\n          \"id\": null,\r\n          \"value\": \"Titanium Gray\"\r\n        },\r\n        {\r\n          \"id\": null,\r\n          \"value\": \"Titanium Black\"\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"id\": null,\r\n      \"type\": \"STORAGE\",\r\n      \"values\": [\r\n        {\r\n          \"id\": null,\r\n          \"value\": \"512GB\"\r\n        }\r\n      ]\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product - Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 404 Not Found",
+									"pm.test('Status code is 404 Not Found', function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"// Test: Response content-type is JSON",
+									"pm.test('Content-Type is application/json', function () {",
+									"    const contentType = pm.response.headers.get('Content-Type');",
+									"    pm.expect(contentType).to.include('application/json');",
+									"});",
+									"",
+									"// Test: Response has error structure (RFC 7807)",
+									"pm.test('Response has RFC 7807 error structure', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('type');",
+									"    pm.expect(jsonData).to.have.property('title');",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"    pm.expect(jsonData.status).to.eql(404);",
+									"});",
+									"",
+									"// Test: Response has detail message",
+									"pm.test('Response has detail message', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('detail');",
+									"    pm.expect(jsonData.detail).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Smartphone Galaxy S24\",\r\n  \"description\": \"Latest model with high res camera\",\r\n  \"price\": 4500.00,\r\n  \"availableQuantity\": 100,\r\n  \"condition\": \"NEW\",\r\n  \"category\": \"Electronics\",\r\n  \"sellerId\": 1,\r\n  \"variants\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/999999999",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"999999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product - Validation Error",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 400 Bad Request",
+									"pm.test('Status code is 400 Bad Request', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"// Test: Response content-type is JSON",
+									"pm.test('Content-Type is application/json', function () {",
+									"    const contentType = pm.response.headers.get('Content-Type');",
+									"    pm.expect(contentType).to.include('application/json');",
+									"});",
+									"",
+									"// Test: Response has error structure (RFC 7807)",
+									"pm.test('Response has RFC 7807 error structure', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('type');",
+									"    pm.expect(jsonData).to.have.property('title');",
+									"    pm.expect(jsonData).to.have.property('status');",
+									"    pm.expect(jsonData.status).to.eql(400);",
+									"});",
+									"",
+									"// Test: Response contains validation errors",
+									"pm.test('Response contains validation errors', function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.have.property('errors');",
+									"    pm.expect(jsonData.errors).to.be.an('array');",
+									"    pm.expect(jsonData.errors.length).to.be.greaterThan(0);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"\",\r\n  \"description\": \"\",\r\n  \"price\": -100,\r\n  \"availableQuantity\": -5,\r\n  \"condition\": \"\",\r\n  \"category\": \"\",\r\n  \"sellerId\": null,\r\n  \"variants\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 204 No Content",
+									"pm.test('Status code is 204 No Content', function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"// Test: Response body is empty (as expected for 204)",
+									"pm.test('Response body is empty', function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									"",
+									"// Test: Response time is acceptable",
+									"pm.test('Response time is less than 2000ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"{{productId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product - Idempotent (Non-existent)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Response status code is 204 No Content (idempotent behavior)",
+									"// Note: The API does not verify if the product exists before deleting,",
+									"// so deleting a non-existent product also returns 204",
+									"pm.test('Status code is 204 No Content (idempotent)', function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"// Test: Response body is empty",
+									"pm.test('Response body is empty', function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									"",
+									"// Test: Response time is acceptable",
+									"pm.test('Response time is less than 2000ms', function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/999999999",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"999999999"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

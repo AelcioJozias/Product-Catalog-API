@@ -431,7 +431,7 @@ O projeto foi desenvolvido com foco em qualidade e manutenibilidade, contando co
 
 ## 📂 Recursos Adicionais
 
-- 📬 **Postman Collection**: Disponível em `docs/Product Catalog API.postman_collection.json`
+- 📬 **Postman Collection**: Disponível em `docs/PostmanIntegrationTest.postman_collection.json`
 
 ### Importando a Collection no Postman
 
