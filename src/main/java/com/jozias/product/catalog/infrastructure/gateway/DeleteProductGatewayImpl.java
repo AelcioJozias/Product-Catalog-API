@@ -1,6 +1,6 @@
 package com.jozias.product.catalog.infrastructure.gateway;
 
-import com.jozias.product.catalog.application.gateway.DeleteProductGateway;
+import com.jozias.product.catalog.domain.gateway.DeleteProductGateway;
 import com.jozias.product.catalog.infrastructure.persistence.repository.ProductRepository;
 
 public class DeleteProductGatewayImpl implements DeleteProductGateway {

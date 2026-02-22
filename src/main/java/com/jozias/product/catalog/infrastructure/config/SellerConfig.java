@@ -3,7 +3,7 @@ package com.jozias.product.catalog.infrastructure.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.jozias.product.catalog.application.gateway.FindSellerGateway;
+import com.jozias.product.catalog.domain.gateway.FindSellerGateway;
 import com.jozias.product.catalog.application.usecase.FindSellerUseCase;
 import com.jozias.product.catalog.infrastructure.gateway.FindSellerGatewayImpl;
 import com.jozias.product.catalog.infrastructure.persistence.mapper.SellerEntityMapper;

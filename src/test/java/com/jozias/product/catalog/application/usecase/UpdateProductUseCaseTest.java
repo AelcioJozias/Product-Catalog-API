@@ -9,9 +9,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.jozias.product.catalog.application.dto.UpdateProductDTO;
-import com.jozias.product.catalog.application.gateway.FindProductGateway;
-import com.jozias.product.catalog.application.gateway.SaveProductGateway;
-import com.jozias.product.catalog.application.usecase.UpdateProductUseCase;
+import com.jozias.product.catalog.domain.gateway.FindProductGateway;
+import com.jozias.product.catalog.domain.gateway.SaveProductGateway;
 import com.jozias.product.catalog.domain.entity.Condition;
 import com.jozias.product.catalog.domain.entity.Product;
 import com.jozias.product.catalog.domain.entity.Seller;

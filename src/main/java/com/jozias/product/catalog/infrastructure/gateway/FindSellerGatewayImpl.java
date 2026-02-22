@@ -2,7 +2,7 @@ package com.jozias.product.catalog.infrastructure.gateway;
 
 import java.util.Optional;
 
-import com.jozias.product.catalog.application.gateway.FindSellerGateway;
+import com.jozias.product.catalog.domain.gateway.FindSellerGateway;
 import com.jozias.product.catalog.domain.entity.Seller;
 import com.jozias.product.catalog.infrastructure.persistence.mapper.SellerEntityMapper;
 import com.jozias.product.catalog.infrastructure.persistence.repository.SellerRepository;

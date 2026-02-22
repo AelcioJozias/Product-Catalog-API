@@ -4,7 +4,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.jozias.product.catalog.application.gateway.FindProductGateway;
+import com.jozias.product.catalog.domain.gateway.FindProductGateway;
 import com.jozias.product.catalog.domain.entity.Product;
 import com.jozias.product.catalog.domain.exception.EntityNotFoundException;
 

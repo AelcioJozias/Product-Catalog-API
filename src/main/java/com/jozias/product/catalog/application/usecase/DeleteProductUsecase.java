@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 
-import com.jozias.product.catalog.application.gateway.DeleteProductGateway;
+import com.jozias.product.catalog.domain.gateway.DeleteProductGateway;
 
 @Slf4j
 public class DeleteProductUsecase {

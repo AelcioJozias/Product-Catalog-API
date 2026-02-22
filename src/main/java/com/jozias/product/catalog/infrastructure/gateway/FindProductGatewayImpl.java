@@ -3,7 +3,7 @@ package com.jozias.product.catalog.infrastructure.gateway;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.jozias.product.catalog.application.gateway.FindProductGateway;
+import com.jozias.product.catalog.domain.gateway.FindProductGateway;
 import com.jozias.product.catalog.domain.entity.Product;
 import com.jozias.product.catalog.infrastructure.persistence.mapper.ProductEntityMapper;
 import com.jozias.product.catalog.infrastructure.persistence.repository.ProductRepository;

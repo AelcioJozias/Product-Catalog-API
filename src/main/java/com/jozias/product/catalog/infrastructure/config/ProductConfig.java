@@ -3,10 +3,10 @@ package com.jozias.product.catalog.infrastructure.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.jozias.product.catalog.application.gateway.DeleteProductGateway;
-import com.jozias.product.catalog.application.gateway.FindProductGateway;
-import com.jozias.product.catalog.application.gateway.FindSellerGateway;
-import com.jozias.product.catalog.application.gateway.SaveProductGateway;
+import com.jozias.product.catalog.domain.gateway.DeleteProductGateway;
+import com.jozias.product.catalog.domain.gateway.FindProductGateway;
+import com.jozias.product.catalog.domain.gateway.FindSellerGateway;
+import com.jozias.product.catalog.domain.gateway.SaveProductGateway;
 import com.jozias.product.catalog.application.usecase.CreateProductUseCase;
 import com.jozias.product.catalog.application.usecase.DeleteProductUsecase;
 import com.jozias.product.catalog.application.usecase.FindProductUseCase;

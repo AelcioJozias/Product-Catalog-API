@@ -1,6 +1,6 @@
 package com.jozias.product.catalog.application.usecase;
 
-import com.jozias.product.catalog.application.gateway.FindSellerGateway;
+import com.jozias.product.catalog.domain.gateway.FindSellerGateway;
 import com.jozias.product.catalog.domain.entity.Seller;
 import com.jozias.product.catalog.domain.exception.EntityNotFoundException;
 

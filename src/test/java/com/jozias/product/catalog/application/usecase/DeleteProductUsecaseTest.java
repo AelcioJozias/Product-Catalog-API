@@ -7,8 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.jozias.product.catalog.application.gateway.DeleteProductGateway;
-import com.jozias.product.catalog.application.usecase.DeleteProductUsecase;
+import com.jozias.product.catalog.domain.gateway.DeleteProductGateway;
 
 import static org.mockito.Mockito.verify;
 

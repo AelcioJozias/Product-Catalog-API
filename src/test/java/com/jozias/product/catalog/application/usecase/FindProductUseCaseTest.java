@@ -12,8 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import com.jozias.product.catalog.application.gateway.FindProductGateway;
-import com.jozias.product.catalog.application.usecase.FindProductUseCase;
+import com.jozias.product.catalog.domain.gateway.FindProductGateway;
 import com.jozias.product.catalog.domain.entity.Condition;
 import com.jozias.product.catalog.domain.entity.Product;
 import com.jozias.product.catalog.domain.entity.Seller;
