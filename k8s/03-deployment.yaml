@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-catalog-api
+  namespace: product-catalog
+  labels:
+    app: product-catalog-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: product-catalog-api
+  template:
+    metadata:
+      labels:
+        app: product-catalog-api
+    spec:
+      containers:
+        - name: product-catalog-api
+          image: jozias/catalog-api-java:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: product-catalog-config
+          env:
+            # Variável Oficial do Java para injetar flags na JVM nativamente.
+            # InitialRAM/MaxRAM: Diz ao Java para consumir no máximo 80% da RAM do container docker para evitar erro de OOMKilled pelo Kubernetes.
+            # ExitOnOutOfMemoryError: Garante que se o Java travar a memória, ele vai desligar imediatamente (fail-fast), forçando o Kubernetes a recriar o pod numa fração de segundos.
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:InitialRAMPercentage=50.0 -XX:MaxRAMPercentage=80.0 -XX:+ExitOnOutOfMemoryError -XX:+UseG1GC"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "200m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+
+          # STARTUP PROBE: É o protetor da inicialização!
+          # Em aplicações como o Spring Boot, iniciar todos os beans, conexões e Kafka às vezes demora 20, 30 segundos.
+          # Durante esse tempo, o Startup Probe "bloqueia" todas as outras probes para que elas não pensem que o container travou e tentem reiniciá-lo antes de sequer subir direito.
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 20 # Dá até 100 segundos (20 * 5s) para o Spring ligar com calma e bater no verde.
+
+          # LIVENESS PROBE: Verifica se a aplicação está "viva" e não travou irremediavelmente.
+          # Se essa probe falhar 3 vezes (failureThreshold), o Kubernetes entende que a aplicação congelou
+          # ou entrou num estado fatal (deadlock, out of memory, etc) e destrói o Pod para criar um novo.
+          # Graças a Startup Probe acima, deixamos o Delay da Liveness quase 0!
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            failureThreshold: 3
+
+          # READINESS PROBE: Verifica se a aplicação está "pronta" para receber tráfego HTTP.
+          # O Spring Boot só responde '200 OK' aqui quando inicializou todos os beans, conectou
+          # ao banco de dados e está realmente preparado para o trabalho. Se falhar, o Kubernetes
+          # não mata o pod, apenas para de mandar requisições novas para ele até ele se recuperar.
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3

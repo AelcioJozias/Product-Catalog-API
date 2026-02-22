@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-catalog-config
+  namespace: product-catalog
+data:
+  # Aqui você pode definir variáveis de ambiente que a aplicação usará
+  SPRING_PROFILES_ACTIVE: "prod"
+  TZ: "America/Sao_Paulo"

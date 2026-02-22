@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: product-catalog-ingress
+  namespace: product-catalog
+  annotations:
+    # Pode forçar redirecionamento para HTTPS, porém deixaremos desativado para testes locais
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+    # Domínio fictício para acessar localmente.
+    # Você terá que adicioná-lo ao arquivo hosts da sua máquina (C:\Windows\System32\drivers\etc\hosts).
+    # Ex: 127.0.0.1 meu-catalogo.local
+    - host: meu-catalogo.local
+      http:
+        paths:
+          - path: /
+            # PathType Prefix indica que tudo que vier depois de / (ex: /api/products, /swagger-ui) será enviado
+            pathType: Prefix
+            backend:
+              service:
+                # Aqui fazemos o link com o Service do tipo ClusterIP que criamos!
+                name: product-catalog-service
+                port:
+                  # A porta exposta NO SERVIÇO (não no Pod)
+                  number: 80

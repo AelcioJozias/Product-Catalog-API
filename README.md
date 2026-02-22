@@ -7,6 +7,8 @@
 ![H2 Database](https://img.shields.io/badge/H2-Database-0054a3?style=for-the-badge&logo=h2&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
 ![Caffeine](https://img.shields.io/badge/Caffeine-Cache-red?style=for-the-badge&logo=coffee&logoColor=white)
 
 **API RESTful para catálogo de produtos com foco em Clean Architecture e boas práticas de backend**
@@ -164,6 +166,33 @@ mvn jacoco:report
 ```
 
 O relatório detalhado de cobertura poderá ser encontrado em: `target/site/jacoco/index.html`
+
+### 🐳 Rodando com Docker
+
+Você pode compilar a imagem e rodar o container diretamente sem precisar do JDK configurado localmente:
+
+```bash
+# 1. Fazer o Build da imagem localmente
+docker build -t product-catalog-api:latest .
+
+# 2. Subir o container localmente na porta 8080
+docker run -d -p 8080:8080 --name catalog-api product-catalog-api:latest
+```
+
+### ☸️ Rodando no Kubernetes (K8s)
+
+O projeto exporta manifestos prontos para orquestração de containers. Com um cluster local ativo (Docker Desktop ou Minikube):
+
+```bash
+# 1. Aplicar todos os manifestos de uma vez (Namespace, ConfigMap, Service, Deployment, HPA e Ingress)
+kubectl apply -f ./k8s/
+
+# 2. Adicione no arquivo "hosts" da sua máquina (C:\Windows\System32\drivers\etc\hosts ou /etc/hosts):
+127.0.0.1       meu-catalogo.local
+```
+Após executar os comandos acima, a API responderá através do Ingress Router no link: `http://meu-catalogo.local/swagger-ui/index.html`
+
+Para destruir todos os recursos: `kubectl delete -f ./k8s/`
 
 
 ### Console H2
@@ -444,9 +473,10 @@ O projeto foi desenvolvido com foco em qualidade e manutenibilidade, contando co
 
 ## 📈 Possíveis Melhorias Futuras
 
+- [x] Containerização (Docker)
+- [x] Orquestração (Kubernetes)
 - [ ] Adicionar autenticação (JWT/OAuth2)
-- [ ] Adicionar métricas e Observabilidade
-- [ ] Containerização (Docker)
+- [ ] Adicionar métricas avançadas (Prometheus/Grafana)
 - [ ] Integração com banco de dados real (PostgreSQL)
 
 ---

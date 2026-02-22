@@ -1,0 +1,10 @@
+.git
+.gitignore
+.idea
+.vscode
+.windsurf
+target/
+*.md
+docs/
+Dockerfile
+.dockerignore
