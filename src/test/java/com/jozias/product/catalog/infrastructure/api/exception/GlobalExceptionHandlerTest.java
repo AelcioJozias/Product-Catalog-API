@@ -215,13 +215,13 @@ class GlobalExceptionHandlerTest {
     @DisplayName("given HttpMessageNotReadableException with MismatchedInputException when handle then should return type mismatch error")
     void givenHttpMessageNotReadableExceptionWithMismatchedInput_whenHandle_thenShouldReturnTypeMismatchError() {
         // given
-        com.fasterxml.jackson.databind.exc.MismatchedInputException mismatchedException = mock(
-                com.fasterxml.jackson.databind.exc.MismatchedInputException.class);
+        tools.jackson.databind.exc.MismatchedInputException mismatchedException = mock(
+                tools.jackson.databind.exc.MismatchedInputException.class);
         when(mismatchedException.getTargetType()).thenReturn((Class) String.class);
         when(mismatchedException.getMessage())
                 .thenReturn("Cannot coerce Integer value to String from Integer value (1)");
         when(mismatchedException.getPath()).thenReturn(List.of(
-                new com.fasterxml.jackson.databind.JsonMappingException.Reference(null, "name")));
+                new tools.jackson.core.JacksonException.Reference(null, "name")));
 
         HttpMessageNotReadableException exception = mock(HttpMessageNotReadableException.class);
         when(exception.getCause()).thenReturn(mismatchedException);
@@ -244,13 +244,13 @@ class GlobalExceptionHandlerTest {
     @DisplayName("given HttpMessageNotReadableException with InvalidFormatException when handle then should return invalid format error")
     void givenHttpMessageNotReadableExceptionWithInvalidFormat_whenHandle_thenShouldReturnInvalidFormatError() {
         // given
-        com.fasterxml.jackson.databind.exc.InvalidFormatException invalidFormatException = mock(
-                com.fasterxml.jackson.databind.exc.InvalidFormatException.class);
+        tools.jackson.databind.exc.InvalidFormatException invalidFormatException = mock(
+                tools.jackson.databind.exc.InvalidFormatException.class);
         when(invalidFormatException.getTargetType())
                 .thenReturn((Class) com.jozias.product.catalog.domain.entity.Condition.class);
         when(invalidFormatException.getValue()).thenReturn("INVALID_CONDITION");
         when(invalidFormatException.getPath()).thenReturn(List.of(
-                new com.fasterxml.jackson.databind.JsonMappingException.Reference(null, "condition")));
+                new tools.jackson.core.JacksonException.Reference(null, "condition")));
 
         HttpMessageNotReadableException exception = mock(HttpMessageNotReadableException.class);
         when(exception.getCause()).thenReturn(invalidFormatException);

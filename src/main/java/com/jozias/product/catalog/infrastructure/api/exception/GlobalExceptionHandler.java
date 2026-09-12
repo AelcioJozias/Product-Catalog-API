@@ -1,8 +1,9 @@
 package com.jozias.product.catalog.infrastructure.api.exception;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.exc.InvalidFormatException;
+import tools.jackson.databind.exc.MismatchedInputException;
 import com.jozias.product.catalog.domain.exception.EntityNotFoundException;
 import com.jozias.product.catalog.domain.exception.ProductInstanceInvalidException;
 import com.jozias.product.catalog.infrastructure.api.dto.ApiErrorResponse;
@@ -208,16 +209,16 @@ public class GlobalExceptionHandler {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
-        private String extractFieldName(JsonMappingException ex) {
-                List<JsonMappingException.Reference> path = ex.getPath();
+        private String extractFieldName(DatabindException ex) {
+                List<JacksonException.Reference> path = ex.getPath();
                 if (path == null || path.isEmpty()) {
                         return UNKNOWN_TYPE;
                 }
 
                 return path.stream()
                                 .map(ref -> {
-                                        if (ref.getFieldName() != null) {
-                                                return ref.getFieldName();
+                                        if (ref.getPropertyName() != null) {
+                                                return ref.getPropertyName();
                                         } else if (ref.getIndex() >= 0) {
                                                 return "[" + ref.getIndex() + "]";
                                         }

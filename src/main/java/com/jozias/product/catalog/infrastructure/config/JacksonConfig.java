@@ -1,46 +1,33 @@
 package com.jozias.product.catalog.infrastructure.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.cfg.CoercionAction;
-import com.fasterxml.jackson.databind.cfg.CoercionInputShape;
-import com.fasterxml.jackson.databind.type.LogicalType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import tools.jackson.databind.cfg.CoercionAction;
+import tools.jackson.databind.cfg.CoercionInputShape;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.type.LogicalType;
 
 /**
- * Jackson configuration to disable automatic type coercion.
+ * Jackson 3 configuration to disable automatic type coercion.
  * This ensures that invalid type values (e.g., number for String field)
  * result in proper type mismatch errors instead of silent conversion.
  */
 @Configuration
 public class JacksonConfig {
 
-        @Bean
-        @SuppressWarnings("removal")
-        public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
-                ObjectMapper objectMapper = builder.build();
+    @Bean
+    public JsonMapper jsonMapper(JsonMapper.Builder builder) {
+        builder.withCoercionConfig(LogicalType.Textual, cfg -> cfg
+                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail)
+                .setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail));
 
-                // Disable coercion from Integer to String
-                objectMapper.coercionConfigFor(LogicalType.Textual)
-                                .setCoercion(CoercionInputShape.Integer, CoercionAction.Fail);
+        builder.withCoercionConfig(LogicalType.Integer, cfg -> cfg
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail));
 
-                // Disable coercion from Float to String
-                objectMapper.coercionConfigFor(LogicalType.Textual)
-                                .setCoercion(CoercionInputShape.Float, CoercionAction.Fail);
+        builder.withCoercionConfig(LogicalType.Float, cfg -> cfg
+                .setCoercion(CoercionInputShape.String, CoercionAction.Fail));
 
-                // Disable coercion from Boolean to String
-                objectMapper.coercionConfigFor(LogicalType.Textual)
-                                .setCoercion(CoercionInputShape.Boolean, CoercionAction.Fail);
-
-                // Disable coercion from String to Integer
-                objectMapper.coercionConfigFor(LogicalType.Integer)
-                                .setCoercion(CoercionInputShape.String, CoercionAction.Fail);
-
-                // Disable coercion from String to Float
-                objectMapper.coercionConfigFor(LogicalType.Float)
-                                .setCoercion(CoercionInputShape.String, CoercionAction.Fail);
-
-                return objectMapper;
-        }
+        return builder.build();
+    }
 }
