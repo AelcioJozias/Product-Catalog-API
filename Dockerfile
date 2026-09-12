@@ -1,5 +1,5 @@
 # Estágio 1: Build da aplicação (Multi-stage build)
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS builder
+FROM maven:3.9-eclipse-temurin-25-alpine AS builder
 
 # Define o diretório de trabalho dentro do container
 WORKDIR /app
@@ -18,7 +18,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Estágio 2: Criação da imagem final de execução, enxuta
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 
 WORKDIR /app
 

@@ -2,8 +2,8 @@
 
 <div align="center">
 
-![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.5-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Java](https://img.shields.io/badge/Java-25-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.1-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
 ![H2 Database](https://img.shields.io/badge/H2-Database-0054a3?style=for-the-badge&logo=h2&logoColor=white)
 ![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
@@ -115,14 +115,16 @@ src/main/java/com/aelcioputzel/productcatalog/
 
 | Categoria | Tecnologia | Versão | Propósito |
 |-----------|------------|--------|-----------|
-| **Runtime** | Java | 21 | LTS com recursos modernos (Records, Pattern Matching) |
-| **Framework** | Spring Boot | 3.2.5 | Framework principal |
-| **Persistência** | Spring Data JPA | 3.2.5 | ORM e repositórios |
-| **Banco de Dados** | H2 Database | 2.1.214 | Banco em memória |
+| **Runtime** | Java | 25 | LTS com recursos modernos da JVM |
+| **Framework** | Spring Boot | 4.1.1 | Framework principal |
+| **Persistência** | Spring Data JPA | 4.1.1 | ORM e repositórios |
+| **Banco de Dados** | H2 Database | Latest | Banco em memória |
 | **Cache** | Caffeine | Latest | Cache de alta performance |
-| **Validação** | Hibernate Validator | 8.0.0 | Bean Validation |
-| **Mapeamento** | MapStruct | 1.5.5 | Conversão de DTOs |
-| **Utilitários** | Lombok | 1.18.30 | Redução de boilerplate |
+| **Validação** | Hibernate Validator | Latest | Bean Validation |
+| **Mapeamento** | MapStruct | 1.6.3 | Conversão de DTOs |
+| **Documentação** | SpringDoc OpenAPI | 3.1.1 | Documentação Swagger/OpenAPI |
+| **Cobertura** | JaCoCo | 0.8.15 | Análise de cobertura compatível com Java 25 |
+| **Utilitários** | Lombok | Latest | Redução de boilerplate |
 
 ---
 
@@ -139,7 +141,7 @@ A API conta com documentação interativa via **Swagger/OpenAPI**, permitindo ex
 
 ### Pré-requisitos
 
-- **Java 21** ou superior
+- **Java 25** ou superior
 - **Maven 3.8+**
 
 ### Instalação e Execução
