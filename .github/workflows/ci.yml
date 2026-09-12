@@ -8,24 +8,35 @@ on:
   workflow_dispatch:
 
 jobs:
+  # ============================================================================
+  # JOB 1: Compilação, Execução de Testes e Geração de Relatório de Cobertura
+  # ============================================================================
   build-and-test:
     name: Build & Test (Java 25)
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Clona o código fonte do repositório para dentro da máquina virtual do GitHub Actions
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
+      # Step 2: Instala o JDK 25 (Eclipse Temurin) e habilita o cache do Maven (~/.m2)
+      # Isso evita baixar todas as dependências novamente a cada nova execução da esteira
       - name: Set up JDK 25 (Temurin)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'temurin'
           cache: 'maven'
 
+      # Step 3: Compila o projeto, roda os 148 testes e gera o relatório JaCoCo
+      # --batch-mode: evita logs interativos
+      # --no-transfer-progress: reduz o ruído de downloads nos logs do GitHub
       - name: Build and Test with Maven
         run: mvn --batch-mode --no-transfer-progress clean verify
 
+      # Step 4: Salva o relatório de cobertura do JaCoCo (HTML) como artefato para download na aba Actions
+      # if: always() garante que o relatório seja gerado mesmo se houver testes quebrados
       - name: Upload JaCoCo Coverage Report
         uses: actions/upload-artifact@v4
         if: always()
@@ -34,6 +45,8 @@ jobs:
           path: target/site/jacoco/
           retention-days: 14
 
+      # Step 5: Se algum teste falhar (if: failure()), exporta os logs detalhados de erro do Surefire
+      # Isso facilita a investigação rápida sem precisar ler milhares de linhas no terminal do CI
       - name: Upload Surefire Test Reports
         uses: actions/upload-artifact@v4
         if: failure()
@@ -42,18 +55,26 @@ jobs:
           path: target/surefire-reports/
           retention-days: 7
 
+  # ============================================================================
+  # JOB 2: Validação da Integridade do Build Docker (Smoke Test)
+  # ============================================================================
   docker-build:
     name: Validate Docker Build
-    needs: build-and-test
+    needs: build-and-test # Só executa se o job de testes (build-and-test) passar
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Clona o repositório na nova máquina virtual para acessar o Dockerfile e o código fonte
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Step 2: Configura o Docker Buildx (ferramenta moderna do Docker para builds multi-stage e cache)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Step 3: Constrói a imagem usando o Dockerfile da raiz (context: .)
+      # push: false -> NÃO envia para nenhum registro externo (apenas valida se o Dockerfile compila sem erros)
+      # tags -> Identificador temporário da imagem durante o teste de build no runner
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
