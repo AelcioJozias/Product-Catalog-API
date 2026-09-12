@@ -17,6 +17,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 public class JacksonConfig {
 
         @Bean
+        @SuppressWarnings("removal")
         public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
                 ObjectMapper objectMapper = builder.build();
 

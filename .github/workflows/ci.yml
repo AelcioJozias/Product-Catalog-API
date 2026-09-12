@@ -38,7 +38,7 @@ jobs:
       # Step 4: Salva o relatório de cobertura do JaCoCo (HTML) como artefato para download na aba Actions
       # if: always() garante que o relatório seja gerado mesmo se houver testes quebrados
       - name: Upload JaCoCo Coverage Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: jacoco-coverage-report
@@ -48,7 +48,7 @@ jobs:
       # Step 5: Se algum teste falhar (if: failure()), exporta os logs detalhados de erro do Surefire
       # Isso facilita a investigação rápida sem precisar ler milhares de linhas no terminal do CI
       - name: Upload Surefire Test Reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: surefire-test-reports
@@ -66,17 +66,17 @@ jobs:
     steps:
       # Step 1: Clona o repositório na nova máquina virtual para acessar o Dockerfile e o código fonte
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # Step 2: Configura o Docker Buildx (ferramenta moderna do Docker para builds multi-stage e cache)
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       # Step 3: Constrói a imagem usando o Dockerfile da raiz (context: .)
       # push: false -> NÃO envia para nenhum registro externo (apenas valida se o Dockerfile compila sem erros)
       # tags -> Identificador temporário da imagem durante o teste de build no runner
       - name: Build Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           push: false
