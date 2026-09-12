@@ -10,6 +10,7 @@
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
 ![Caffeine](https://img.shields.io/badge/Caffeine-Cache-red?style=for-the-badge&logo=coffee&logoColor=white)
+[![CI Pipeline](https://github.com/AelcioJozias/Product-Catalog-API/actions/workflows/ci.yml/badge.svg)](https://github.com/AelcioJozias/Product-Catalog-API/actions/workflows/ci.yml)
 
 **API RESTful para catálogo de produtos com foco em Clean Architecture e boas práticas de backend**
 
